@@ -3,10 +3,13 @@ source "https://rubygems.org"
 ruby "3.2.2"
 
 # Mongoid to work with the MongoDB v4.4 database
-gem 'mongoid', '~> 7.0'
+gem 'mongoid', '~> 8.1.4'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+
+# Adding railties
+gem "railties"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
