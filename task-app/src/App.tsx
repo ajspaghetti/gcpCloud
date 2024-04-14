@@ -1,6 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Nav from './components/Nav'
+import Home from './components/Home'
+import Checklist from './components/Checklist'
 
 function App() {
   return (
