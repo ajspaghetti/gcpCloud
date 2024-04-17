@@ -4,20 +4,30 @@ Category.destroy_all
 Item.destroy_all
 
 # Create Users
-user1 = User.create!(username: 'alex', email: 'alexander@spagno.li')
-user2 = User.create!(username: 'test', email: 'test@example.com')
+users = [
+  { username: 'alex', email: 'alex@example.com' },
+  { username: 'john', email: 'john@example.com' },
+  { username: 'maria', email: 'maria@example.com' },
+  { username: 'lisa', email: 'lisa@example.com' }
+].map { |user| User.create!(user) }
 
 # Create Categories
-category1 = Category.create!(name: 'Work', description: 'Work-related tasks', user: user1)
-category2 = Category.create!(name: 'Home', description: 'Home chores', user: user1)
-category3 = Category.create!(name: 'Misc', description: 'Miscellaneous tasks', user: user2)
+categories = [
+  'Work', 'Home', 'Personal Development', 'Health', 'Education',
+  'Shopping', 'Outdoor Activities', 'Tech', 'Travel', 'Fitness',
+  'Art', 'Music', 'Cooking', 'Gardening', 'Finance'
+].map { |name| Category.create!(name: name, description: "#{name} related tasks") }
 
 # Create Items
-item1 = Item.create!(title: 'Finish report', description: 'Complete the annual report', completed: false, due_date: Date.tomorrow)
-item2 = Item.create!(title: 'Wash dishes', description: 'Clean all dirty dishes', completed: true, due_date: Date.today)
-item3 = Item.create!(title: 'Complete assignment', description: 'Finish up the assignment', completed: false, due_date: Date.tomorrow)
+25.times do |i|
+  item = Item.create!(
+    title: "Task ##{i + 1}",
+    description: "Description for task ##{i + 1}",
+    completed: [true, false].sample,
+    due_date: Date.today + rand(-15..15).days,
+    user: users.sample,
+    category: categories.sample
+  )
+end
 
-# Associate Items with Categories using has_and_belongs_to_many
-category1.items << item1
-category1.items << item3
-category2.items << item2
+puts "Database seeded successfully!"

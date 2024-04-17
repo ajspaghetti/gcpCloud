@@ -4,8 +4,12 @@ class Category
   field :name, type: String
   field :description, type: String
 
-  belongs_to :user
-  has_and_belongs_to_many :items
+  has_many :items
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
+
+  # Define a method to get users indirectly through items
+  def users
+    User.in(id: items.pluck(:user_id))
+  end
 end
