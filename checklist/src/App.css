@@ -1,0 +1,263 @@
+/* Basic resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9; /* Light pastel blue background */
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Navbar styling */
+nav {
+  background-color: #5d5b6a; /* Subtle pastel purple */
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+}
+
+nav h1 {
+  color: #f4f4f9;
+}
+
+nav p {
+  color: #dfdce3; /* Lighter shade for text */
+}
+
+/* Container for centering layout */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* Common styles for all buttons and links */
+button, a {
+  padding: 10px 20px;
+  background-color: #c2c2f0; /* Pastel violet */
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+}
+
+button:hover, a:hover {
+  background-color: #a9a9d9; /* Darker pastel on hover */
+  color: #fff;
+}
+
+/* Form styling */
+input[type="text"], input[type="date"], select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 2px solid #ddd; /* Subtle border */
+  border-radius: 4px;
+  display: block;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
+  font-weight: bold;
+}
+
+/* Responsive grid for forms and listings */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* List styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: #e6e6fa; /* Light pastel lavender background */
+  margin: 1rem 0;
+  padding: 0.9rem 1.2rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+li:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  nav, .container, .grid {
+      flex-direction: column;
+  }
+
+  nav {
+      align-items: center;
+  }
+
+  input[type="text"], select, textarea {
+      width: auto;
+  }
+}
+
+.item-create-row form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #f9f9f9; /* Light grey background for visibility */
+  border-radius: 8px;
+}
+
+.item-create-row label {
+  flex-grow: 1;
+  margin-right: 10px; /* Ensure some space between labels and inputs */
+}
+
+.item-create-row input[type="text"],
+.item-create-row input[type="date"] {
+  width: 100%;
+}
+
+.item-create-row input[type="checkbox"] {
+  margin-left: 5px; /* Small margin for checkbox alignment */
+}
+
+.item-create-row button {
+  padding: 8px 16px;
+  background-color: #c2c2f0; /* Pastel violet */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.item-create-row button:hover {
+  background-color: #a9a9d9;
+}
+
+@media (max-width: 768px) {
+  .item-create-row form {
+      flex-direction: column;
+  }
+
+  .item-create-row label {
+      flex-grow: 0;
+      margin-right: 0; /* Reset margin in mobile view */
+  }
+}
+
+.item-create-row button:hover {
+  background-color: #a9a9d9;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #f9f9f9; /* Light grey background for visibility */
+  border-radius: 8px;
+}
+
+.form-row label {
+  flex-grow: 1;
+  margin-right: 10px; /* Ensure some space between labels and inputs */
+}
+
+.form-row input[type="text"],
+.form-row input[type="date"] {
+  width: 100%;
+}
+
+.form-row input[type="checkbox"] {
+  margin-left: 5px; /* Small margin for checkbox alignment */
+}
+
+.form-row button {
+  padding: 8px 16px;
+  background-color: #c2c2f0; /* Pastel violet */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-row button:hover {
+  background-color: #a9a9d9;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+      flex-direction: column;
+  }
+
+  .form-row label {
+      flex-grow: 0;
+      margin-right: 0; /* Reset margin in mobile view */
+  }
+}
+
+.item-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-list li {
+  background: #e6e6fa; /* Light pastel lavender background */
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.item-list li:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+}
+
+.item-property {
+  margin-right: 20px; /* Space between properties */
+  white-space: nowrap; /* Keep each property from wrapping */
+  flex-shrink: 0; /* Prevents shrinking */
+}
+
+@media (max-width: 768px) {
+  .item-list li {
+    flex-direction: column; /* Stack details vertically on small screens */
+    align-items: flex-start;
+  }
+
+  .item-property {
+    margin-right: 0; /* Adjust spacing for smaller screens */
+    margin-bottom: 5px; /* Space between stacked properties */
+  }
+}
+
+
+
