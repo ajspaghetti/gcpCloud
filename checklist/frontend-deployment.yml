@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checklist-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: checklist-frontend
+  template:
+    metadata:
+      labels:
+        app: checklist-frontend
+    spec:
+      containers:
+      - name: checklist-frontend
+        image: gcr.io/gcpcloudproject-420220/checklist:latest
+        ports:
+        - containerPort: 3001
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "100Mi"
+          limits:
+            cpu: "500m"
+            memory: "200Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: checklist-frontend-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3001
+  selector:
+    app: checklist-frontend
