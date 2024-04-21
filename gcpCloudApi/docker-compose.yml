@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: production
+      DB_HOST: 34.145.239.124
+      DB_USER: dbadmin
+      DB_PASS: Yellowstone2019
