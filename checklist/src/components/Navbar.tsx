@@ -1,3 +1,4 @@
+// Navbar.tsx
 import React from 'react';
 
 interface NavbarProps {

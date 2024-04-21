@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   resources :categories
   resources :users
 
+  # Mount Action Cable server
+  mount ActionCable.server => '/cable'
+
   # Endpoint for health check
   get "up" => "rails/health#show", as: :rails_health_check
 
