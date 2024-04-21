@@ -18,13 +18,13 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
   const [dueDate, setDueDate] = useState('');
   const [categoryName, setCategoryName] = useState('');
   const [username, setUsername] = useState('');
-  const [items, setItems] = useState<any[]>([]); 
+  const [items, setItems] = useState<any[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const fetchItems = async () => {
-        const response = await axios.get('http://localhost:3001/items?include=user,category');
+        const response = await axios.get('http://localhost:3000/items?include=user,category');
         setItems(response.data);
     };
 
@@ -33,7 +33,7 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
     if (category) {
       finalCategoryId = category.id;
     } else {
-      const newCategory = await axios.post('http://localhost:3001/categories', { name: categoryName });
+      const newCategory = await axios.post('http://localhost:3000/categories', { name: categoryName });
       finalCategoryId = newCategory.data.id;
     }
 
@@ -42,13 +42,13 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
     if (user) {
       finalUserId = user.id;
     } else {
-      const newUser = await axios.post('http://localhost:3001/users', { username });
+      const newUser = await axios.post('http://localhost:3000/users', { username });
       finalUserId = newUser.data.id;
     }
 
 
 
-    await axios.post('http://localhost:3001/items', {
+    await axios.post('http://localhost:3000/items', {
       title,
       description,
       completed,

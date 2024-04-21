@@ -24,15 +24,15 @@ const HomePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/items')
+    axios.get('http://localhost:3000/items')
       .then(response => setItems(response.data))
       .catch(error => setError('Error fetching items'));
 
-    axios.get('http://localhost:3001/users')
+    axios.get('http://localhost:3000/users')
       .then(response => setUsers(response.data))
       .catch(error => setError('Error fetching users'));
 
-    axios.get('http://localhost:3001/categories')
+    axios.get('http://localhost:3000/categories')
       .then(response => setCategories(response.data))
       .catch(error => setError('Error fetching categories'));
   }, []);

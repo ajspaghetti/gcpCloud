@@ -55,17 +55,17 @@ const ItemManager: React.FC = () => {
   }, [selectedItem, categories, users]);
 
   const fetchItems = async () => {
-    const response = await axios.get('http://localhost:3001/items?include=user,category');
+    const response = await axios.get('http://localhost:3000/items?include=user,category');
     setItems(response.data);
   };
 
   const fetchUsers = async () => {
-    const response = await axios.get('http://localhost:3001/users');
+    const response = await axios.get('http://localhost:3000/users');
     setUsers(response.data);
   };
 
   const fetchCategories = async () => {
-    const response = await axios.get('http://localhost:3001/categories');
+    const response = await axios.get('http://localhost:3000/categories');
     setCategories(response.data);
   };
 
@@ -82,7 +82,7 @@ const ItemManager: React.FC = () => {
     if (category) {
       finalCategoryId = category.id;
     } else {
-      const newCategory = await axios.post('http://localhost:3001/categories', { name: categoryName });
+      const newCategory = await axios.post('http://localhost:3000/categories', { name: categoryName });
       finalCategoryId = newCategory.data.id;
     }
 
@@ -91,11 +91,11 @@ const ItemManager: React.FC = () => {
     if (user) {
       finalUserId = user.id;
     } else {
-      const newUser = await axios.post('http://localhost:3001/users', { username });
+      const newUser = await axios.post('http://localhost:3000/users', { username });
       finalUserId = newUser.data.id;
     }
 
-    const updatedItem = await axios.put(`http://localhost:3001/items/${selectedItem.id}`, {
+    const updatedItem = await axios.put(`http://localhost:3000/items/${selectedItem.id}`, {
       title,
       description,
       completed,
@@ -111,7 +111,7 @@ const ItemManager: React.FC = () => {
   const handleDeleteItem = async () => {
     if (!selectedItem) return;
 
-    await axios.delete(`http://localhost:3001/items/${selectedItem.id}`);
+    await axios.delete(`http://localhost:3000/items/${selectedItem.id}`);
     fetchItems();  // Refresh the items list
     setSelectedItem(null);  // Clear selection
   };
