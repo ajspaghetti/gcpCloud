@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import WebSocketService from '../services/WebSocketService';
 
 interface User {
   id: string;
@@ -11,7 +12,13 @@ interface Category {
   name: string;
 }
 
-const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users, categories }) => {
+interface ItemCreateProps {
+  ws: WebSocketService | null;
+  users: User[];
+  categories: Category[];
+}
+
+const ItemCreate: React.FC<ItemCreateProps> = ({ ws, users, categories }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [completed, setCompleted] = useState(false);
@@ -20,13 +27,21 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
   const [username, setUsername] = useState('');
   const [items, setItems] = useState<any[]>([]);
 
+  useEffect(() => {
+    fetchItems();
+  }, []); 
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/items?include=user,category');
+      setItems(response.data); // Update items state with fetched data
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const fetchItems = async () => {
-        const response = await axios.get('http://localhost:3000/items?include=user,category');
-        setItems(response.data);
-    };
 
     let finalCategoryId = '';
     const category = categories.find(cat => cat.name === categoryName);
@@ -46,8 +61,6 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
       finalUserId = newUser.data.id;
     }
 
-
-
     await axios.post('http://localhost:3000/items', {
       title,
       description,
@@ -63,7 +76,13 @@ const ItemCreate: React.FC<{ users: User[], categories: Category[] }> = ({ users
     setDueDate('');
     setCategoryName('');
     setUsername('');
-    fetchItems();  // Refresh the items list
+
+    if (ws) {
+      const message = JSON.stringify({ type: 'new_item', title });
+      ws.sendMessage(message);
+    }
+
+    fetchItems(); // Refresh the items list after creating a new item
   };
 
   return (

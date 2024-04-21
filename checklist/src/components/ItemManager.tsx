@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import WebSocketService from '../services/WebSocketService';
+
+interface ItemManagerProps {
+  ws: WebSocketService | null;
+}
 
 interface Item {
   id: string;
@@ -23,7 +28,7 @@ interface Category {
   name: string;
 }
 
-const ItemManager: React.FC = () => {
+const ItemManager: React.FC<ItemManagerProps> = ({ ws }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -41,18 +46,24 @@ const ItemManager: React.FC = () => {
     fetchItems();
     fetchUsers();
     fetchCategories();
-  }, []);
 
-  useEffect(() => {
-    if (selectedItem) {
-      setTitle(selectedItem.title);
-      setDescription(selectedItem.description);
-      setCompleted(selectedItem.completed);
-      setDueDate(selectedItem.due_date);
-      setCategoryName(categories.find(cat => cat.id === selectedItem.category_id)?.name || '');
-      setUsername(users.find(usr => usr.id === selectedItem.user_id)?.username || '');
+    // Subscribe to WebSocket events for real-time updates
+    if (ws) {
+      ws.onMessage((message) => {
+        // Handle WebSocket message and update component state accordingly
+        const updatedItem = JSON.parse(message.data);
+        setItems((prevItems) => {
+          const index = prevItems.findIndex((item) => item.id === updatedItem.id);
+          if (index !== -1) {
+            const newItems = [...prevItems];
+            newItems[index] = updatedItem;
+            return newItems;
+          }
+          return prevItems;
+        });
+      });
     }
-  }, [selectedItem, categories, users]);
+  }, [ws]);
 
   const fetchItems = async () => {
     const response = await axios.get('http://localhost:3000/items?include=user,category');
@@ -70,7 +81,7 @@ const ItemManager: React.FC = () => {
   };
 
   const handleSelectItem = (id: string) => {
-    const item = items.find(item => item.id === id);
+    const item = items.find((item) => item.id === id);
     setSelectedItem(item ?? null);
   };
 
@@ -78,7 +89,7 @@ const ItemManager: React.FC = () => {
     if (!selectedItem) return;
 
     let finalCategoryId = '';
-    const category = categories.find(cat => cat.name === categoryName);
+    const category = categories.find((cat) => cat.name === categoryName);
     if (category) {
       finalCategoryId = category.id;
     } else {
@@ -87,7 +98,7 @@ const ItemManager: React.FC = () => {
     }
 
     let finalUserId = '';
-    const user = users.find(usr => usr.username === username);
+    const user = users.find((usr) => usr.username === username);
     if (user) {
       finalUserId = user.id;
     } else {
@@ -104,23 +115,23 @@ const ItemManager: React.FC = () => {
       user_id: finalUserId,
     });
 
-    fetchItems();  // Refresh the items list
-    setSelectedItem(null);  // Clear selection
+    fetchItems(); // Refresh the items list
+    setSelectedItem(null); // Clear selection
   };
 
   const handleDeleteItem = async () => {
     if (!selectedItem) return;
 
     await axios.delete(`http://localhost:3000/items/${selectedItem.id}`);
-    fetchItems();  // Refresh the items list
-    setSelectedItem(null);  // Clear selection
+    fetchItems(); // Refresh the items list
+    setSelectedItem(null); // Clear selection
   };
 
   return (
     <div className="item-manager-row">
       <h1>Item Manager</h1>
       <ul className="item-list">
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.id} onClick={() => handleSelectItem(item.id)}>
             <span className="item-property">Title: {item.title}</span>
             <span className="item-property">Desc: {item.description}</span>
@@ -135,12 +146,12 @@ const ItemManager: React.FC = () => {
         <div>
           <h2>Edit Item</h2>
           <form className="form-row" onSubmit={(e) => { e.preventDefault(); handleUpdateItem(); }}>
-            <label>Title: <input type="text" value={title} onChange={e => setTitle(e.target.value)} /></label>
-            <label>Description: <input type="text" value={description} onChange={e => setDescription(e.target.value)} /></label>
+            <label>Title: <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
+            <label>Description: <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} /></label>
             <label>Completed: <input type="checkbox" checked={completed} onChange={() => setCompleted(!completed)} /></label>
-            <label>Due Date: <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} /></label>
-            <label>Category: <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} /></label>
-            <label>User: <input type="text" value={username} onChange={e => setUsername(e.target.value)} /></label>
+            <label>Due Date: <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /></label>
+            <label>Category: <input type="text" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} /></label>
+            <label>User: <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></label>
             <button type="submit">Update Item</button>
             <button type="button" onClick={handleDeleteItem}>Delete Item</button>
           </form>
