@@ -7,7 +7,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ username }) => {
   return (
     <nav>
-      <h1>Task Tracker</h1>
+      <h1>Wiz Checklist App: React, Ruby on Rails, MongoDB, Terraform, GCP</h1>
       {username && <p>Checked in as: {username}</p>}
     </nav>
   );
