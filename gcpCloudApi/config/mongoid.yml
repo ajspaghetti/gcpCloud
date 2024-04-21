@@ -200,10 +200,6 @@ test:
 #         user: 'production_user'    # Replace with actual production DB user
 #         password: 'production_password'  # Replace with actual production DB password
 #         auth_source: 'admin'
-#         ssl: true   # Assuming SSL connection for security
-#         ssl_cert: '/path/to/production/cert.crt'  # Update path as necessary
-#         ssl_key: '/path/to/production/cert.key'   # Update path as necessary
-#         ssl_verify: true
 #         read:
 #           mode: :nearest   # Depending on your read preference in production
 #         retry_writes: true # Enable retryable writes
