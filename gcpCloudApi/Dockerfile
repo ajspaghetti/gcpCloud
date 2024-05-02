@@ -1,32 +1,56 @@
-# Dockerfile for Ruby on Rails API
-# syntax=docker/dockerfile:1
-FROM ruby:3.2.2-slim as base
-
-# Set work directory
-WORKDIR /app
+# Set the base image
+FROM docker.io/library/ubuntu:latest
 
 # Install dependencies
-RUN set -eux; \
-    apt-get update -qq && apt-get install -y build-essential libpq-dev curl gnupg lsb-release; \
-    curl -fsSL https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian92-4.0.28.tgz -o mongodb.tgz; \
-    tar -xzf mongodb.tgz; \
-    mv mongodb-linux-x86_64-debian92-4.0.28/bin/* /usr/local/bin/; \
-    rm -rf mongodb-linux-x86_64-debian92-4.0.28 mongodb.tgz
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    bash \
+    build-essential \
+    curl \
+    nodejs \
+    npm \
+    sqlite3 \
+    tzdata \
+    git \
+    ruby \
+    ruby-dev \
+    libsqlite3-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    libffi-dev \
+    libssl-dev \
+    libyaml-dev
 
-# Copy Gemfile and install gems
-COPY Gemfile* /app/
-RUN bundle install
+# Install Bundler
+RUN gem install bundler -v 2.5.4
 
-# Copy the main application.
-COPY . /app
+# Create a non-root user
+RUN adduser --disabled-password --gecos '' appuser
 
-# Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+# Set the working directory
+WORKDIR /app
 
-# Expose port 3000 to the outside world
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock ./
+
+# Change ownership of /app directory recursively
+RUN chown -R appuser:appuser /app
+
+# Switch to the non-root user
+USER appuser
+
+# Set Bundler config and install gems
+RUN bundle config set --local without 'development test' && \
+    bundle install --jobs 4 --retry 3
+
+# Copy the rest of your application
+COPY . .
+
+# Precompile assets
+RUN bundle exec rails assets:precompile
+
+# Expose port 3000
 EXPOSE 3000
 
-# Start the main process.
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# Start the Rails server
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
