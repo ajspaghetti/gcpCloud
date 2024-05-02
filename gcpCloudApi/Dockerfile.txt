@@ -1,0 +1,54 @@
+# Use an official lightweight Ruby image
+FROM ruby:latest
+
+# Install GPG v2
+RUN apt-get update && \
+    apt-get install -y gnupg2
+
+# Fetch RVM public keys
+RUN gpg2 --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
+# Install RVM
+RUN \curl -sSL https://get.rvm.io | bash -s stable
+
+# Install a specific Ruby version using RVM
+RUN /bin/bash -l -c "rvm install 3.2.2"
+
+# Set the default Ruby version
+RUN /bin/bash -l -c "rvm use 3.2.2 --default"
+
+# Set up environment variables to configure the GEM home and bundler paths
+ENV GEM_HOME=/bundle \
+    BUNDLE_PATH=/bundle \
+    BUNDLE_BIN=/bundle/bin \
+    BUNDLE_APP_CONFIG=/bundle \
+    PATH="/bundle/bin:${PATH}"
+
+# Create and set the working directory
+WORKDIR /app
+
+# Install Bundler with the specific version
+RUN gem install bundler:2.5.4
+
+# Copy the Gemfile and Gemfile.lock from your project into the Docker image
+COPY Gemfile Gemfile.lock ./
+
+# Install Ruby gems, avoiding installation of unnecessary groups in production
+RUN bundle config set --local without 'development test' && \
+    bundle install --jobs 4 --retry 3
+
+# Copy the rest of your application into the container
+COPY . .
+
+# Ensure that your entrypoint script is executable
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+
+# Use the entrypoint script to configure the container startup
+ENTRYPOINT ["entrypoint.sh"]
+
+# Set the default command to run when starting the container
+CMD ["rails", "server", "-p", "3000", "-b", "0.0.0.0"]
+
+# Expose port 3000 to allow communication to/from the server
+EXPOSE 3000
